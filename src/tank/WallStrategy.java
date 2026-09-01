@@ -10,7 +10,6 @@ public final class WallStrategy implements Strategy {
     private int lastEnergy = 100;
     private boolean initialized = false;
 
-    // Nueva variable para controlar el estado del escaneo
     private int scanState = 0;
 
     // Margen de seguridad en píxeles para no tocar la pared
@@ -35,15 +34,7 @@ public final class WallStrategy implements Strategy {
         int currentHeading = movingForward ? robot.heading : (robot.heading + 180) % 360;
 
         // ESCANEO ROTATIVO: Alterna la visión para no tener puntos ciegos en el muro
-        if (scanState == 0) {
-            robot.turnGunTo(currentHeading); // Vigila el camino por delante (detecta camperos en esquinas)
-        } else if (scanState == 1) {
-            robot.turnGunTo(robot.heading - 90); // Vigila el centro de la arena
-        } else {
-            robot.turnGunTo((currentHeading + 180) % 360); // Vigila la retaguardia por si nos persiguen
-        }
-        // Avanza al siguiente estado de escaneo (0, 1, 2, 0, 1, 2...)
-        scanState = (scanState + 1) % 3;
+        this.rotaryScan(robot, currentHeading);
 
         int distToCorner = getDistanceToWall(robot, currentHeading);
 
@@ -63,6 +54,15 @@ public final class WallStrategy implements Strategy {
         }
     }
 
+    private void rotaryScan(JuniorRobot robot, int currentHeading) {
+        switch (scanState) {
+            case 0 -> robot.turnGunTo(currentHeading);                     // Frente de marcha
+            case 1 -> robot.turnGunTo(robot.heading - 90);                 // Centro del mapa
+            case 2 -> robot.turnGunTo((currentHeading + 180) % 360);       // Retaguardia
+        }
+        scanState = (scanState + 1) % 3;
+    }
+
     private void goToClosestWall(JuniorRobot robot) {
         int distN = robot.fieldHeight - robot.robotY;
         int distS = robot.robotY;
@@ -72,22 +72,20 @@ public final class WallStrategy implements Strategy {
         int minDist = Math.min(Math.min(distN, distS), Math.min(distE, distW));
 
         if (minDist == distN) {
-            robot.turnTo(0);
-            robot.ahead(distN - WALL_MARGIN);
-            robot.turnTo(270);
+            moveToWall(robot, 0, distN);
         } else if (minDist == distS) {
-            robot.turnTo(180);
-            robot.ahead(distS - WALL_MARGIN);
-            robot.turnTo(90);
+            moveToWall(robot, 180, distS);
         } else if (minDist == distE) {
-            robot.turnTo(90);
-            robot.ahead(distE - WALL_MARGIN);
-            robot.turnTo(0);
+            moveToWall(robot, 90, distE);
         } else {
-            robot.turnTo(270);
-            robot.ahead(distW - WALL_MARGIN);
-            robot.turnTo(180);
+            moveToWall(robot, 270, distW);
         }
+    }
+
+    private void moveToWall(JuniorRobot robot, int heading, int distanceToWall) {
+        robot.turnTo(heading);
+        robot.ahead(distanceToWall - WALL_MARGIN);
+        robot.turnTo((heading + 270) % 360);
     }
 
     private int getDistanceToWall(JuniorRobot robot, int heading) {
