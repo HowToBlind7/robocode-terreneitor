@@ -28,7 +28,7 @@ public final class WallStrategy implements Strategy {
 
     @Override
     public void run(JuniorRobot robot) {
-        // Se ejecuta la rutina de inicio solo una vez al comenzar la batalla
+        // Se envia el robot al muro mas cercano
         if (!initialized) {
             goToClosestWall(robot);
             lastEnergy = robot.energy;
@@ -62,34 +62,33 @@ public final class WallStrategy implements Strategy {
             }
         }
 
-        // Si la distancia a la esquina llegó a 0 o menos (se alcanzó el límite del margen), se ejecuta la lógica para doblar
+        // Si llega a una esquina, se decide si doblar o repetir trayecto
         if (getDistanceToWall(robot, currentHeading) <= 0) {
             handleCornerLogic(robot);
         }
     }
 
     private void rotaryScan(JuniorRobot robot, int currentHeading) {
-        // Se rota el cañón a una posición distinta según el estado actual para cubrir todos los frentes
+        // Escaneo por turnos según el estado (scanState)
         switch (scanState) {
             case 0 -> robot.turnGunTo(currentHeading);                     // Se vigila el frente hacia donde se dirige
-            case 1 -> robot.turnGunTo(robot.heading - 90);                 // Se vigila el centro de la arena
-            case 2 -> robot.turnGunTo((currentHeading + 180) % 360);       // Se vigila la retaguardia por si hay persecución
+            case 1 -> robot.turnGunTo(robot.heading - 90);                 // Se vigila el centro del mapa
+            case 2 -> robot.turnGunTo((currentHeading + 180) % 360);       // Se vigila la retaguardia
         }
         // Se avanza al siguiente estado de escaneo
         scanState = (scanState + 1) % 3;
     }
 
     private void goToClosestWall(JuniorRobot robot) {
-        // Se calcula la distancia exacta desde la posición actual hasta cada una de las 4 paredes
         int distN = robot.fieldHeight - robot.robotY;
         int distS = robot.robotY;
         int distE = robot.fieldWidth - robot.robotX;
         int distW = robot.robotX;
 
-        // Se busca cuál es la distancia más corta
+        // Se establece la minima distancia a los bordes
         int minDist = Math.min(Math.min(distN, distS), Math.min(distE, distW));
 
-        // Se enfila el robot hacia la pared más cercana
+        // Se dirige al muro mas cercano
         if (minDist == distN) {
             moveToWall(robot, 0, distN);
         } else if (minDist == distS) {
@@ -102,7 +101,7 @@ public final class WallStrategy implements Strategy {
     }
 
     private void moveToWall(JuniorRobot robot, int heading, int distanceToWall) {
-        // Se apunta hacia la pared elegida, se avanza frenando justo antes del margen, y se gira para empezar el patrullaje
+        // Se apunta hacia la pared elegida y se gira para empezar el patrullaje
         robot.turnTo(heading);
         robot.ahead(distanceToWall - WALL_MARGIN);
         robot.turnTo((heading + 270) % 360);
@@ -125,8 +124,7 @@ public final class WallStrategy implements Strategy {
         if (effectiveShot && !wasHit) {
             movingForward = !movingForward;
         } else {
-            // Se dobla la esquina manteniendo la marcha actual (movingForward se mantiene intacto):
-            // Si va hacia adelante recorre el perímetro antihorario; si va en reversa recorre el horario.
+            // Se dobla en la esquina para evitar más daño o buscar más objetivos
             robot.turnLeft(90);
         }
 
@@ -138,7 +136,7 @@ public final class WallStrategy implements Strategy {
 
     @Override
     public void onScannedRobot(JuniorRobot robot) {
-        // Se apunta el cañón exactamente hacia donde se detectó al enemigo
+        // Se apunta el cañón hacia el robot escaneado
         robot.turnGunTo(robot.scannedAngle);
 
         // Se calcula la posición relativa del enemigo respecto al chasis
@@ -165,7 +163,6 @@ public final class WallStrategy implements Strategy {
 
     @Override
     public void onHitByBullet(JuniorRobot robot) {
-        // Se registra el impacto recibido para abortar posibles persecuciones en reversa al llegar a la esquina
         wasHit = true;
     }
 
@@ -180,6 +177,7 @@ public final class WallStrategy implements Strategy {
 
     @Override
     public void onHitWall(JuniorRobot robot) {
+        // No deberia ocurrir este evento.
         // Por seguridad, si el cálculo de márgenes falla y se toca la pared, se rebota un poco para despegar
         if (movingForward) {
             robot.back(20);
