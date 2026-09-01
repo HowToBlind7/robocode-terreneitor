@@ -1,0 +1,13 @@
+# Binarios y carpetas de compilación
+out/
+bin/
+target/
+*.class
+
+# Archivos de configuración de IntelliJ IDEA
+.idea/
+*.iml
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
