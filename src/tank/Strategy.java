@@ -1,7 +1,7 @@
 package tank;
 import robocode.*;
 
-public sealed interface Strategy permits BasicStrategy, BetterCrazyStrategy, CompetitiveStrategy, WallStrategy {
+public sealed interface Strategy permits BasicStrategy, BetterCrazyStrategy, CompetitiveStrategy, SimpleRandomStrategy, WallStrategy {
 
     void run(JuniorRobot robot);
     void onScannedRobot(JuniorRobot robot);

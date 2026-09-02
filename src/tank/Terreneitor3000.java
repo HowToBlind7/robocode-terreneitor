@@ -1,6 +1,8 @@
 package tank;
 import robocode.*;
 
+import java.awt.*;
+
 
 public class Terreneitor3000 extends JuniorRobot
 {
@@ -9,6 +11,13 @@ public class Terreneitor3000 extends JuniorRobot
 
 	@Override
 	public void run() {
+		this.setColors(
+				Color.BLACK.getRGB(),
+				Color.RED.getRGB(),
+				Color.RED.getRGB(),
+				Color.RED.getRGB(),
+				Color.RED.getRGB()
+		);
 		while (true) {
 			strategy.run(this);
 		}

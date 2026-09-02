@@ -26,6 +26,8 @@ public final class WallStrategy implements Strategy {
     // Margen de seguridad en píxeles que se deja para evitar chocar contra la pared
     private final int WALL_MARGIN = 30;
 
+    public WallStrategy() {}
+
     @Override
     public void run(JuniorRobot robot) {
         // Se envia el robot al muro mas cercano
