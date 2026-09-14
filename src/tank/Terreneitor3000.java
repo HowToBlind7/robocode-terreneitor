@@ -7,7 +7,8 @@ import java.awt.*;
 public class Terreneitor3000 extends JuniorRobot
 {
 
-	private final Strategy strategy = new WallStrategy();
+	private final Strategist strategist = Strategist.MainStrategist.getInstance();
+	private Strategy strategy;
 
 	@Override
 	public void run() {
@@ -19,6 +20,7 @@ public class Terreneitor3000 extends JuniorRobot
 				Color.RED.getRGB()
 		);
 		while (true) {
+			strategy = strategist.decideStrategy(this);
 			strategy.run(this);
 		}
 	}

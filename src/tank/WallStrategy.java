@@ -90,7 +90,7 @@ public final class WallStrategy implements Strategy {
         // Se establece la minima distancia a los bordes
         int minDist = Math.min(Math.min(distN, distS), Math.min(distE, distW));
 
-        // Se dirige al muro mas cercano
+        // Se dirige al muro más cercano
         if (minDist == distN) {
             moveToWall(robot, 0, distN);
         } else if (minDist == distS) {
@@ -179,7 +179,7 @@ public final class WallStrategy implements Strategy {
 
     @Override
     public void onHitWall(JuniorRobot robot) {
-        // No deberia ocurrir este evento.
+        // No debería ocurrir este evento.
         // Por seguridad, si el cálculo de márgenes falla y se toca la pared, se rebota un poco para despegar
         if (movingForward) {
             robot.back(20);
