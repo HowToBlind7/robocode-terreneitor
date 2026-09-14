@@ -27,4 +27,26 @@ public interface Strategist {
             }
         }
     }
+    
+    class EndGameStrategist implements Strategist {
+
+        private static final EndGameStrategist INSTANCE = new EndGameStrategist();
+        private final Strategy wallStrategy = new WallStrategy();
+        private final Strategy simpleRandomStrategy = new SimpleRandomStrategy();
+
+        private EndGameStrategist() {}
+
+        public static EndGameStrategist getInstance() {
+            return INSTANCE;
+        }
+
+        @Override
+        public Strategy decideStrategy(JuniorRobot robot) {
+            if (robot.others <= 1 || robot.energy < 25) {
+                return simpleRandomStrategy;
+            } else {
+                return wallStrategy;
+            }
+        }
+    }
 }
