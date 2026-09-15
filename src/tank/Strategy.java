@@ -1,7 +1,7 @@
 package tank;
 import robocode.*;
 
-public sealed interface Strategy permits SimpleRandomStrategy, WallStrategy {
+public sealed interface Strategy permits SimpleRandomStrategy, TurretStrategy, WallStrategy {
 
     void run(JuniorRobot robot);
     void onScannedRobot(JuniorRobot robot);

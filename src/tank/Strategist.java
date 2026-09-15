@@ -9,10 +9,12 @@ public interface Strategist {
     class MainStrategist implements Strategist {
 
         private static final MainStrategist INSTANCE = new MainStrategist();
-        private final Strategy wallStrategy = new WallStrategy();
-        private final Strategy simpleRandomStrategy = new SimpleRandomStrategy();
 
-        private MainStrategist() {}
+        private final Strategy wallStrategy = new WallStrategy();
+        private final Strategy turretStrategy = new TurretStrategy();
+
+        private MainStrategist() {
+        }
 
         public static MainStrategist getInstance() {
             return INSTANCE;
@@ -20,14 +22,15 @@ public interface Strategist {
 
         @Override
         public Strategy decideStrategy(JuniorRobot robot) {
-            if (robot.energy < 30) {
-                return simpleRandomStrategy;
-            } else {
-                return wallStrategy;
+            if (robot.energy <= 5) {
+                return turretStrategy;
             }
+
+            return wallStrategy;
         }
     }
-    
+
+
     class EndGameStrategist implements Strategist {
 
         private static final EndGameStrategist INSTANCE = new EndGameStrategist();
