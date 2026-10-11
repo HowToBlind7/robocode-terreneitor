@@ -5,9 +5,10 @@ import robocode.JuniorRobot
 /**
  * Estrategia de torreta estática.
  * El robot no se mueve, solo gira el cañón 360° buscando enemigos y dispara
- * con potencia máxima. Migración del record Java a data class de Kotlin.
+ * con potencia máxima.
+ * Al no tener estado, se modela como object (singleton de Kotlin).
  */
-data class TurretStrategy(private val unit: Unit = Unit) : Strategy {
+object TurretStrategy : Strategy {
 
     override fun run(robot: JuniorRobot) {
         robot.turnGunRight(360)
@@ -23,7 +24,7 @@ data class TurretStrategy(private val unit: Unit = Unit) : Strategy {
     }
 
     override fun onHitWall(robot: JuniorRobot) {
-        // No debería ocurrir porque no se mueve, pero se implementa vacío por contrato.
+        // No debería ocurrir porque no se mueve
     }
 
     override fun onHitRobot(robot: JuniorRobot) {

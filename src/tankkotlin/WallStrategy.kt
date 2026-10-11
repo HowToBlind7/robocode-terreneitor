@@ -1,7 +1,7 @@
 package tankkotlin
 
 import robocode.JuniorRobot
-import java.lang.Math.min
+import kotlin.math.min
 
 /**
  * Estrategia de patrullaje de muros (Wall Strategy).

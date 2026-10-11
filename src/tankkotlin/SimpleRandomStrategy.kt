@@ -5,11 +5,10 @@ import java.util.Random
 
 /**
  * Estrategia de movimiento aleatorio simple.
- * Migración del record Java a data class de Kotlin.
- * Se usa un valor por defecto para el parámetro rng, eliminando la necesidad
- * de un constructor secundario como en Java.
+ * Se usa un valor por defecto para el parámetro rng en el constructor primario,
+ * eliminando la necesidad de un constructor secundario.
  */
-data class SimpleRandomStrategy(val rng: Random = Random()) : Strategy {
+class SimpleRandomStrategy(private val rng: Random = Random()) : Strategy {
 
     override fun run(robot: JuniorRobot) {
         // Escaneo constante girando el cañón
