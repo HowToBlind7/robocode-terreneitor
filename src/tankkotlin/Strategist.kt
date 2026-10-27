@@ -7,7 +7,7 @@ import robocode.JuniorRobot
  * Los singletons se modelan con object (eliminando el boilerplate del patrón
  * Singleton de Java: constructor privado + campo estático + getInstance()).
  */
-interface Strategist {
+fun interface Strategist {
 
     fun decideStrategy(robot: JuniorRobot): Strategy
 

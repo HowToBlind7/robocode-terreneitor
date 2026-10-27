@@ -86,7 +86,7 @@ class WallStrategy : Strategy {
         val distW = robot.robotX
 
         // Se establece la minima distancia a los bordes
-        val minDist = min(min(distN, distS), min(distE, distW))
+        val minDist = minOf(distN, distS, distE, distW)
 
         // Se dirige al muro más cercano
         when (minDist) {
@@ -104,13 +104,11 @@ class WallStrategy : Strategy {
         robot.turnTo((heading + 270) % 360)
     }
 
-    private fun getDistanceToWall(robot: JuniorRobot, heading: Int): Int {
-        return when {
-            heading >= 315 || heading < 45  -> robot.fieldHeight - robot.robotY - WALL_MARGIN  // Norte
-            heading >= 45  && heading < 135 -> robot.fieldWidth - robot.robotX - WALL_MARGIN   // Este
-            heading >= 135 && heading < 225 -> robot.robotY - WALL_MARGIN                      // Sur
-            else                            -> robot.robotX - WALL_MARGIN                      // Oeste
-        }
+    private fun getDistanceToWall(robot: JuniorRobot, heading: Int) = when {
+        heading >= 315 || heading < 45  -> robot.fieldHeight - robot.robotY - WALL_MARGIN  // Norte
+        heading >= 45  && heading < 135 -> robot.fieldWidth - robot.robotX - WALL_MARGIN   // Este
+        heading >= 135 && heading < 225 -> robot.robotY - WALL_MARGIN                      // Sur
+        else                            -> robot.robotX - WALL_MARGIN                      // Oeste
     }
 
     private fun handleCornerLogic(robot: JuniorRobot) {
